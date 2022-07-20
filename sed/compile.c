@@ -1713,6 +1713,9 @@ finish_program (struct vector *program)
 void
 profile_program (struct vector *program)
 {
+  fprintf(stderr, "FILE:LINE: %-11s %-11s %-11s %-11s %-11s %-11s\n",
+          "MATCH_ADDR", "EXECUTE", "BRANCH",
+          "SUBST_MATCH", "SUBST_IN", "SUBST_OUT");
   for (int i = 0; i < program->v_length; ++i)
     {
       const struct sed_cmd *sc = &program->v[i];
@@ -1733,6 +1736,6 @@ profile_program (struct vector *program)
       fprintf(stderr, "%s:%d: %11zu %11zu %11zu %11zu %11zu %11zu\n",
               sc->file, sc->line,
               sc->match_address, sc->executed, sc->branch_taken,
-              sum_input, sum_output, matched);
+              matched, sum_input, sum_output);
     }
 }
