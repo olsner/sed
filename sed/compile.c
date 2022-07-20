@@ -1728,6 +1728,8 @@ profile_program (struct vector *program)
           break;
         }
 
+      /* TODO Handle multiple commands on the same line better. Including the
+       * command character would help, or maybe track columns when parsing? */
       printf("%s:%d: %11zu %11zu %11zu %11zu %11zu %11zu\n", sc->file, sc->line,
               sc->match_address, sc->executed, sc->branch_taken,
               sum_input, sum_output, matched);

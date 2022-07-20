@@ -141,6 +141,8 @@ Usage: %s [OPTION]... {script-only-if-no-other-script} [input-file]...\n\
                  suppress automatic printing of pattern space\n"));
   fprintf (out, _("      --debug\n\
                  annotate program execution\n"));
+  fprintf (out, _("      --profile\n\
+                 profile program execution\n"));
   fprintf (out, _("  -e script, --expression=script\n\
                  add the script to the commands to be executed\n"));
   fprintf (out, _("  -f script-file, --file=script-file\n\
