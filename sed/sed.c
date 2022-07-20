@@ -64,6 +64,9 @@ bool sandbox = false;
 /* if set, print debugging information */
 bool debug = false;
 
+/* if set, print profiling information on exit */
+bool profile = false;
+
 /* How do we edit files in-place? (we don't if NULL) */
 char *in_place_extension = NULL;
 
@@ -191,7 +194,8 @@ main (int argc, char **argv)
 #define SHORTOPTS "bsnrzuEe:f:l:i::V:"
 
   enum { SANDBOX_OPTION = CHAR_MAX+1,
-         DEBUG_OPTION
+         DEBUG_OPTION,
+         PROFILE_OPTION,
     };
 
   static const struct option longopts[] = {
@@ -206,6 +210,7 @@ main (int argc, char **argv)
     {"zero-terminated", 0, NULL, 'z'},
     {"quiet", 0, NULL, 'n'},
     {"posix", 0, NULL, 'p'},
+    {"profile", 0, NULL, PROFILE_OPTION},
     {"silent", 0, NULL, 'n'},
     {"sandbox", 0, NULL, SANDBOX_OPTION},
     {"separate", 0, NULL, 's'},
@@ -324,6 +329,10 @@ main (int argc, char **argv)
           separate_files = true;
           break;
 
+        case PROFILE_OPTION:
+          profile = true;
+          break;
+
         case SANDBOX_OPTION:
           sandbox = true;
           break;
@@ -376,6 +385,9 @@ main (int argc, char **argv)
     debug_print_program (the_program);
 
   return_code = process_files (the_program, argv+optind);
+
+  if (profile)
+    profile_program (the_program);
 
   finish_program (the_program);
   ck_fclose (NULL);

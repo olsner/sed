@@ -133,6 +133,9 @@ struct subst {
 #ifdef lint
   char* replacement_buffer;
 #endif
+  size_t sum_input;
+  size_t sum_output;
+  size_t matched;
 };
 
 
@@ -150,6 +153,14 @@ struct sed_cmd {
 
   /* The actual command character. */
   char cmd;
+
+  /* Source file and line. */
+  const char *file;
+  int line;
+  /* Profiling counters. */
+  size_t match_address;
+  size_t executed;
+  size_t branch_taken;
 
   /* auxiliary data for various commands */
   union {
@@ -191,6 +202,7 @@ struct vector *compile_string (struct vector *, char *str, size_t len);
 struct vector *compile_file (struct vector *, const char *cmdfile);
 void check_final_program (struct vector *);
 void rewind_read_files (void);
+void profile_program (struct vector *);
 void finish_program (struct vector *);
 
 struct regex *compile_regex (struct buffer *b, int flags, int needed_sub);
@@ -257,6 +269,9 @@ extern bool sandbox;
 
 /* If set, print debugging information.  */
 extern bool debug;
+
+/* If set, collect and print profiling information.  */
+extern bool profile;
 
 #define MBRTOWC(pwc, s, n, ps) \
   (mb_cur_max == 1 ? \

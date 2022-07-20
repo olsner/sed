@@ -443,11 +443,10 @@ next_cmd_entry (struct vector **vectorp)
     }
 
   cmd = v->v + v->v_length;
-  cmd->a1 = NULL;
-  cmd->a2 = NULL;
+  memset(cmd, 0, sizeof(*cmd));
   cmd->range_state = RANGE_INACTIVE;
-  cmd->addr_bang = false;
-  cmd->cmd = '\0';	/* something invalid, to catch bugs early */
+  cmd->file = cur_input.name;
+  cmd->line = cur_input.line;
 
   *vectorp  = v;
   return cmd;
@@ -740,6 +739,10 @@ setup_replacement (struct subst *sub, const char *text, size_t length)
   enum replacement_types repl_type = REPL_ASIS, save_type = REPL_ASIS;
   struct replacement root;
   struct replacement *tail;
+
+  // Does OB_MALLOC zero memory? Or just add a memset...
+  sub->sum_input = 0;
+  sub->sum_output = 0;
 
   sub->max_id = 0;
   base = MEMDUP (text, length, char);
@@ -1704,4 +1707,29 @@ finish_program (struct vector *program)
   (void)program;
 #endif /* lint */
 
+}
+
+/* Print all profiling information in program. */
+void
+profile_program (struct vector *program)
+{
+  for (int i = 0; i < program->v_length; ++i)
+    {
+      const struct sed_cmd *sc = &program->v[i];
+
+      size_t sum_input = 0, sum_output = 0, matched = 0;
+
+      switch (sc->cmd)
+        {
+        case 's':
+          sum_input = sc->x.cmd_subst->sum_input;
+          sum_output = sc->x.cmd_subst->sum_output;
+          matched = sc->x.cmd_subst->matched;
+          break;
+        }
+
+      printf("%s:%d: %11zu %11zu %11zu %11zu %11zu %11zu\n", sc->file, sc->line,
+              sc->match_address, sc->executed, sc->branch_taken,
+              sum_input, sum_output, matched);
+    }
 }

@@ -832,6 +832,8 @@ match_address_p (struct sed_cmd *cmd, struct input *input)
   if (!cmd->a1)
     return true;
 
+  cmd->match_address++;
+
   if (cmd->range_state != RANGE_ACTIVE)
     {
       if (!cmd->a2)
@@ -1019,6 +1021,8 @@ do_subst (struct subst *sub)
                     &regs, sub->max_id + 1))
     return;
 
+  sub->matched++;
+
   if (debug)
     {
       if (regs.num_regs>0 && regs.start[0] != -1)
@@ -1124,6 +1128,9 @@ do_subst (struct subst *sub)
   if (start < line.length)
     str_append (&s_accum, line.active + start, line.length-start);
   s_accum.chomped = line.chomped;
+
+  sub->sum_input += line.length;
+  sub->sum_output += s_accum.length;
 
   /* Exchange line and s_accum.  This can be much cheaper
      than copying s_accum.active into line.text (for huge lines). */
@@ -1292,6 +1299,7 @@ execute_program (struct vector *vec, struct input *input)
 
       if (match_address_p (cur_cmd, input) != cur_cmd->addr_bang)
         {
+          cur_cmd->executed++;
           switch (cur_cmd->cmd)
             {
             case 'a':
@@ -1558,6 +1566,7 @@ execute_program (struct vector *vec, struct input *input)
             case 't':
               if (replaced)
                 {
+                  cur_cmd->branch_taken++;
                   replaced = false;
                   cur_cmd = vec->v + cur_cmd->x.jump_index;
                   continue;
@@ -1567,6 +1576,7 @@ execute_program (struct vector *vec, struct input *input)
             case 'T':
               if (!replaced)
                 {
+                  cur_cmd->branch_taken++;
                   cur_cmd = vec->v + cur_cmd->x.jump_index;
                   continue;
                 }
