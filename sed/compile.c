@@ -1713,8 +1713,8 @@ finish_program (struct vector *program)
 void
 profile_program (struct vector *program)
 {
-  fprintf(stderr, "FILE:LINE: %-11s %-11s %-11s %-11s %-11s %-11s\n",
-          "MATCH_ADDR", "EXECUTE", "BRANCH",
+  fprintf(stderr, "%-19s %11s %11s %11s %11s %11s %11s\n",
+          "FILE:LINE", "MATCH_ADDR", "EXECUTE", "BRANCH",
           "SUBST_MATCH", "SUBST_IN", "SUBST_OUT");
   for (int i = 0; i < program->v_length; ++i)
     {
@@ -1733,7 +1733,7 @@ profile_program (struct vector *program)
 
       /* TODO Handle multiple commands on the same line better. Including the
        * command character would help, or maybe track columns when parsing? */
-      fprintf(stderr, "%s:%d: %11zu %11zu %11zu %11zu %11zu %11zu\n",
+      fprintf(stderr, "%-15s:%d: %11zu %11zu %11zu %11zu %11zu %11zu\n",
               sc->file, sc->line,
               sc->match_address, sc->executed, sc->branch_taken,
               matched, sum_input, sum_output);
