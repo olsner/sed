@@ -1279,6 +1279,14 @@ debug_print_line (struct line *ln)
   putchar ('\n');
 }
 
+static double
+get_time (void)
+{
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return ts.tv_sec + ts.tv_nsec * 1e-9;
+}
+
 /* Execute the program `vec' on the current input line.
    Return exit status if caller should quit, -1 otherwise. */
 static int
@@ -1286,6 +1294,8 @@ execute_program (struct vector *vec, struct input *input)
 {
   struct sed_cmd *cur_cmd;
   struct sed_cmd *end_cmd;
+  struct sed_cmd *last_cmd = NULL;
+  double last_start_time;
 
   cur_cmd = vec->v;
   end_cmd = vec->v + vec->v_length;
@@ -1297,6 +1307,11 @@ execute_program (struct vector *vec, struct input *input)
           debug_print_command (vec, cur_cmd);
         }
 
+      if (last_cmd)
+        last_cmd->time += get_time() - last_start_time;
+
+      last_start_time = get_time();
+      last_cmd = cur_cmd;
       if (match_address_p (cur_cmd, input) != cur_cmd->addr_bang)
         {
           cur_cmd->executed++;
@@ -1654,6 +1669,8 @@ execute_program (struct vector *vec, struct input *input)
       ++cur_cmd;
     }
 
+    if (last_cmd)
+      last_cmd->time += get_time() - last_start_time;
     if (debug)
       debug_print_end_of_cycle ();
     if (!no_default_output)

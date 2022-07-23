@@ -161,6 +161,7 @@ struct sed_cmd {
   size_t match_address;
   size_t executed;
   size_t branch_taken;
+  double time;
 
   /* auxiliary data for various commands */
   union {
