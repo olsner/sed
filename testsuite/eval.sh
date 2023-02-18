@@ -27,6 +27,8 @@ cpu
   cpu
 EOF
 
+set -x
+
 # create a copy of the input file.
 # Keep the name 'eval.in2' - it is used in the 'eval' commands in the
 # sed program below.

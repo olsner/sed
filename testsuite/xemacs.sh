@@ -41,7 +41,7 @@ s/^ *# */#/
 EOF
 
 
-sed -f xemacs.sed < "$dir/xemacs.inp" > out || fail=1
+"$SED" -f xemacs.sed < "$dir/xemacs.inp" > out || fail=1
 remove_cr_inplace out
 compare "$dir/xemacs.good" out || fail=1
 

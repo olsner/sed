@@ -64,7 +64,7 @@ cat <<\EOF > 8to7-exp || framework_failure_
 \262\310\244\362\244\342\314\276\244\362\244\342$
 EOF
 
-sed -e 'l;d' 8to7-inp > 8to7-out || fail=1
+$SED -e 'l;d' 8to7-inp > 8to7-out || fail=1
 remove_cr_inplace 8to7-out
 compare 8to7-exp 8to7-out || fail=1
 

@@ -45,15 +45,15 @@ dir="$abs_top_srcdir/testsuite"
 
 
 # Run the three variations of the sed script
-sed -n -f "$dir/binary.sed" < inp > out1 || fail=1
+$SED -n -f "$dir/binary.sed" < inp > out1 || fail=1
 remove_cr_inplace out1
 compare exp out1 || fail=1
 
-sed -n -f "$dir/binary2.sed" < inp > out2 || fail=1
+$SED -n -f "$dir/binary2.sed" < inp > out2 || fail=1
 remove_cr_inplace out2
 compare exp out2 || fail=1
 
-sed -n -f "$dir/binary3.sed" < inp > out3 || fail=1
+$SED -n -f "$dir/binary3.sed" < inp > out3 || fail=1
 remove_cr_inplace out3
 compare exp out3 || fail=1
 

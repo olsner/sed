@@ -684,6 +684,13 @@ compare ()
   fi
 }
 
+sed() {
+    "$SED" "$@"
+}
+require_valgrind_() {
+    skip_ "Skipping all valgrind tests"
+}
+
 # -----------------------------------------------------------------------------
 
 # If you want to override the testdir_prefix_ function,

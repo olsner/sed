@@ -37,12 +37,13 @@ printf 'a\n' >> input || framework_failure_
 cat <<\EOF > exp-err1 || framework_failure_
 sed: regex input buffer length larger than INT_MAX
 EOF
+printf 'bbbbb\n' > exp-output || framework_failure_
 
 
 # Before sed-4.5, this was silently a no-op: would not perform the subsitution
 # but would not indicate any error either (https://bugs.gnu.org/30520).
 # Exit code 4 is "panic".
-returns_ 4 sed 's/a/b/g' input >/dev/null 2>err1 || fail=1
-compare_ exp-err1 err1 || fail=1
+returns_ 4 $SED 's/a/b/g' input 2>err1 | tr -d '\0' > output || fail=1
+compare_ exp-err1 err1 || compare_ exp-output output || fail=1
 
 Exit $fail

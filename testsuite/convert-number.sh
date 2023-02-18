@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 . "${srcdir=.}/testsuite/init.sh"; path_prepend_ ./sed
-print_ver_ sed
+print_ver_ $SED
 
 #
 # Test \dNNN conversions
@@ -58,7 +58,7 @@ EOF
 
 printf '\r\n\377\ndB\ndQ\n{4\n\1\n\0007\n' > exp-d || framework_failure_
 
-sed -f prog-d in-d > out-d || fail=1
+$SED -f prog-d in-d > out-d || fail=1
 compare_ exp-d out-d || fail=1
 
 if test "$fail" -eq 1 ; then
@@ -105,7 +105,7 @@ EOF
 
 printf '\5\n\377\no9\noQ\nS4\n\1\n' > exp-o || framework_failure_
 
-sed -f prog-o in-o > out-o || fail=1
+$SED -f prog-o in-o > out-o || fail=1
 compare_ exp-o out-o || fail=1
 
 if test "$fail" -eq 1 ; then
@@ -142,7 +142,7 @@ EOF
 
 printf '\6\n\316\nxy\n\253c\n' > exp-x || framework_failure_
 
-sed -f prog-x in-x > out-x || fail=1
+$SED -f prog-x in-x > out-x || fail=1
 compare_ exp-x out-x || fail=1
 
 if test "$fail" -eq 1 ; then
@@ -172,7 +172,7 @@ EOF
 printf '\1\n#\nE\ng\n\211\n\253\n\253\n\315\n\315\n\357\n\357\n' \
     > cnv-num-exp || framework_failure_
 
-sed -f cnv-num-prog cnv-num-in > cnv-num-out || fail=1
+$SED -f cnv-num-prog cnv-num-in > cnv-num-out || fail=1
 compare_ cnv-num-exp cnv-num-out || fail=1
 
 Exit $fail

@@ -47,7 +47,7 @@ printf "s/\302\347\317\302/\306\374\313\334/\n" > 8bit-prog.sed \
     || framework_failure_
 
 
-sed -f 8bit-prog.sed < "$abs_top_srcdir/testsuite/8bit.inp" > out || fail=1
+$SED -f 8bit-prog.sed < "$abs_top_srcdir/testsuite/8bit.inp" > out || fail=1
 remove_cr_inplace out
 compare "$abs_top_srcdir/testsuite/8bit.good" out || fail=1
 
