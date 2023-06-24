@@ -1327,6 +1327,7 @@ execute_program (struct vector *vec, struct input *input)
 
             case '{':
             case 'b':
+              cur_cmd->branch_taken++;
               cur_cmd = vec->v + cur_cmd->x.jump_index;
               continue;
 
